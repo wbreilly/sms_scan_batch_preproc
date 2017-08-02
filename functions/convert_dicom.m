@@ -61,6 +61,8 @@ for irun = 1:length(b.runs)
     fprintf('%0.0f files converted to nii.\n', size(b.rundir(irun).files, 1));
     
     
+    
+    
     %%%%%% added by wbr to adopt naming convention
     matlabbatch{1}.spm.util.cat.vols = cellstr(spm_select('FPListRec', rundir, '^*.nii'));
     matlabbatch{1}.spm.util.cat.name = sprintf('%s.%s.bold.nii',b.curSubj, b.runs{irun});
@@ -72,9 +74,20 @@ for irun = 1:length(b.runs)
     delete f*.nii
     b.rundir(irun).files = sprintf('%s/%s/%s.%s.bold.nii',b.dataDir,b.runs{irun}, b.curSubj, b.runs{irun});
     
+    
+    
     cd(b.scriptdir);
     
 end
+% need to convert mprage too
+% Convert dicom images
+ragedir   = fullfile(b.dataDir,'002_mprage_sag_NS_g3');
+dcmfiles = spm_select('FPList', ragedir, '.*dcm');
+dcmhdr    = spm_dicom_headers(dcmfiles);
+cd ragedir
+dcmoutput = spm_dicom_convert(dcmhdr, 'all', 'flat', 'nii');
+b.mprage = cell2mat(dcmoutput.files);
+fprintf('%0.0f files converted to nii (mprage).\n', size(b.rundir(irun).files, 1));
 
-
+cd(b.scriptdir);
 end

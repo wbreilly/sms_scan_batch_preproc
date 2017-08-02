@@ -67,7 +67,7 @@ end
 % First re-organize files into cell array
 b.allfiles = {};
 for i = 1:length(b.runs)
-    b.allfiles{i} = b.rundir(i).files; 
+    b.allfiles{i} = b.rundir(i).sfiles; 
 end
 
 % Then run realignment
