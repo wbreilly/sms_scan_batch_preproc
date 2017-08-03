@@ -100,7 +100,7 @@ end
 ragedir   = fullfile(b.dataDir,'002_mprage_sag_NS_g3');
 dcmfiles = spm_select('FPList', ragedir, '.*dcm');
 dcmhdr    = spm_dicom_headers(dcmfiles);
-cd ragedir
+cd(ragedir)
 dcmoutput = spm_dicom_convert(dcmhdr, 'all', 'flat', 'nii');
 b.mprage = cell2mat(dcmoutput.files);
 fprintf('%0.0f files converted to nii (mprage).\n', size(b.rundir(irun).files, 1));

@@ -12,7 +12,7 @@ function [] = preproc_wbr()
 % SPM). 'DCM' or 'NII'. Note: this QA routine is NOT compatible with
 % .img/.hdr. Please convert .img/.hdr to .nii prior to running routine.
 
-fileType    = 'NII';
+fileType    = 'DCM';
 
 %-- Directory Information
 % Paths to relevant directories.
@@ -39,7 +39,7 @@ scriptdir   = '/Users/wbr/walter/fmri/sms_scan_analyses/sms_scan_batch_preproc';
 %
 %  See BIDS format
 
-subjects    = {'s002' 's003'}; %'s004'}; % 's001'
+subjects    = {'s001' 's002' 's003' 's004'};
 runs        = { 'Rifa_1' 'Rifa_2' 'Rifa_3' 'Rifa_4' 'Rifa_5' 'Rifa_6' 'Rifa_7' 'Rifa_8' 'Rifa_9'};  
 
 %-- Auto-accept
