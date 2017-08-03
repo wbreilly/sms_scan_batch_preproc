@@ -34,7 +34,8 @@ function [b] = slicetime_correct(b)
 % Check if slice time correction was already run and if so, whether it should be run
 % again
 runflag = 1;
-if size(spm_select('FPListRec', b.dataDir, ['^slicetime*' b.runs{1} '.*bold\.nii']), 1) > 0 % check only for first run
+
+if size(spm_select('ExtFPListRec', b.dataDir, ['^slicetime.*'  b.runs{1} '.*bold\.nii'],1)) > 0 % check only for first run
     if b.auto_accept
         response = 'n';
     else
@@ -53,13 +54,13 @@ end
 % First re-organize files into cell array
 b.allfiles = {};
 for i = 1:length(b.runs)
-    b.allfiles{i} = b.rundir(i).files; 
+    b.allfiles{i} = cellstr(b.rundir(i).files); 
 end
 
 % run slicetime correction 
 if runflag
     % setup batch with slice time paramaters (created in gui on 7_30_17)
-    matlabbatch{1}.spm.temporal.st.scans = {b.allfiles};
+    matlabbatch{1}.spm.temporal.st.scans = b.allfiles';
     matlabbatch{1}.spm.temporal.st.nslices = 38;
     matlabbatch{1}.spm.temporal.st.tr = 1220;
     matlabbatch{1}.spm.temporal.st.ta = 0;
@@ -74,7 +75,7 @@ end
 
 
 for i = 1:length(b.runs)
-    b.rundir(i).sfiles = spm_select('ExtFPListRec', b.dataDir, ['^slicetime*'  b.runs{i} '.*bold\.nii']);
+    b.rundir(i).sfiles = spm_select('ExtFPListRec', b.dataDir, ['^slicetime.*'  b.runs{i} '.*bold\.nii']);
     fprintf('%02d:   %0.0f slicetime files found.\n', i, length(b.rundir(i).sfiles))
 end
 

@@ -1,3 +1,5 @@
+function [] = preproc_wbr()
+% Walter Reilly's spm preproc script, adapted from Maureen Ritchey
 
 %====================================================================================
 %			Specify Variables
@@ -18,9 +20,9 @@ fileType    = 'NII';
 % scriptdir = path to directory housing this script (and auxiliary scripts)
 % QAdir     = Name of output QA directory
 
-dataDir     = '/Users/wbr/walter/fmri/sms_scan_fmri_data_ra_and_qa';
-scriptdir   = '/Users/wbr/walter/fmri/wbr_memolab_fmri_qa_master'; % fileparts(mfilename('fullpath'));
-QAdir       = 'QA';
+dataDir     = '/Users/wbr/walter/fmri/sms_scan_analyses/data_for_spm/batch_preproc_test_8_2_17';
+scriptdir   = '/Users/wbr/walter/fmri/sms_scan_analyses/sms_scan_batch_preproc'; % fileparts(mfilename('fullpath'));
+
 
 %-- Info for Subjects
 % Subject-specific information.
@@ -37,8 +39,8 @@ QAdir       = 'QA';
 %
 %  See BIDS format
 
-subjects    = {'s004'}; %'s003' 's001' 's002'}; 
-runs        = { 'Rifa_1' 'Rifa_2' 'Rifa_3' 'Rifa_4' 'Rifa_5' 'Rifa_6' 'Rifa_7' 'Rifa_8' 'Rifa_9'};% 
+subjects    = {'s002' 's003'}; %'s004'}; % 's001'
+runs        = { 'Rifa_1' 'Rifa_2' 'Rifa_3' 'Rifa_4' 'Rifa_5' 'Rifa_6' 'Rifa_7' 'Rifa_8' 'Rifa_9'};  
 
 %-- Auto-accept
 % Do you want to run all the way through without asking for user input?
@@ -47,13 +49,16 @@ runs        = { 'Rifa_1' 'Rifa_2' 'Rifa_3' 'Rifa_4' 'Rifa_5' 'Rifa_6' 'Rifa_7' '
 
 auto_accept = 0;
 
+% coreg flag. if ) don't coregister again
+coreg_flag = 1;
+
 
 %====================================================================================
 %			Routine (DO NOT EDIT BELOW THIS BOX!!)
 %====================================================================================
 
 %-- Clean up
-close all
+
 clc
 fprintf('Initializing and checking paths.\n')
 
@@ -70,26 +75,8 @@ if exist('spm','file') == 0
     error('SPM must be on the path.')
 end
 
-fprintf('Running QA script. Results will be saved in QA directory: %s\n', QAdir)
+fprintf('Running preproc script')
 
-%--Loop over subjects
-for i = 1:length(subjects)
-    
-    % Define variables for individual subjects - General
-    b.curSubj   = subjects{i};
-    b.runs      = runs;
-    b.dataDir   = fullfile(dataDir, b.curSubj);
-    
-    %%% Alternatively, if there is an initializeVars script set up, call that
-    %%% see https://github.com/ritcheym/fmri_misc/tree/master/batch_system    
-    %     b = initializeVars(subjects,i);
-    
-    % Define variables for individual subjects - QA General
-    b.scriptdir   = scriptdir;
-    b.QAdir       = QAdir;
-    b.auto_accept = auto_accept;
-    b.messages    = sprintf(
-    
     
     %--Loop over subjects
 for i = 1:length(subjects)
@@ -105,14 +92,13 @@ for i = 1:length(subjects)
     
      % Define variables for individual subjects - QA General
     b.scriptdir   = scriptdir;
-    b.QAdir       = QAdir;
     b.auto_accept = auto_accept;
     b.messages    = sprintf('Messages for subject %s:\n', subjects{i});
     
     % Check whether QA has already been run for a subject
     
     % Initialize diary for saving output
-    diaryname = fullfile(b.dataDir, b.QAdir, 'QA_diary_output.txt');
+    diaryname = fullfile(b.dataDir, 'QA_diary_output.txt');
     diary(diaryname);
     
     % Convert dicom images or find nifti images
@@ -142,21 +128,41 @@ for i = 1:length(subjects)
     fprintf('------------------------------------------------------------\n')
     fprintf('\n')
     
-    % Run coregistration (estimate)
-    fprintf('--Coregistering images--\n')
-    [b] = coregister_estimate(b);
+    % set origin in mprage to AC
+    fprintf('Set origin to AC!')
+    [b] = set_origin(b);
     fprintf('------------------------------------------------------------\n')
     fprintf('\n')
     
-    % Run normalization
-    fprintf('--Normalizing--\n')
-    [b] = normalize_est_write(b);
     
+    % Run coregistration (estimate)
+    if coreg_flag
+        fprintf('--Coregistering images--\n')
+        [b] = coregister_estimate(b);
+        fprintf('------------------------------------------------------------\n')
+        fprintf('\n')
+    else
+        fprintf('--Skipping coregistration--\n')
+        fprintf('------------------------------------------------------------\n')
+        fprintf('\n')
+    end
+    
+    % Run normalization estimate
+    fprintf('--Normalize estimating--\n')
+    [b] = normalize_estimate(b);
+    fprintf('------------------------------------------------------------\n')
+    fprintf('\n')
+    
+    % Run normalization write
+    fprintf('--Normalize writing--\n')
+    [b] = normalize_write(b);
+    fprintf('------------------------------------------------------------\n')
+    fprintf('\n')
     
     
 end % i (subjects)
 
-fprintf('Done QA script\n')
+fprintf('Done preproc script\n')
 diary off
 
 end % main function

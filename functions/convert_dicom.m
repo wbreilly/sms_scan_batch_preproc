@@ -79,7 +79,23 @@ for irun = 1:length(b.runs)
     cd(b.scriptdir);
     
 end
+
+
 % need to convert mprage too
+
+% Check whether there are already nifti files
+ragedir   = fullfile(b.dataDir,'002_mprage_sag_NS_g3');
+ragefiles = spm_select('FPList', ragedir, '.*\.nii');
+if size(ragefiles, 1) > 0
+    fprintf('There are already %0.0f nii files in mprage folder.\n', size(ragefiles,1));
+    response = input('Are you sure you want to use dicom files? y/n \n', 's');
+    if strcmp(response,'y') == 1
+        disp('Continuing running dicom conversion')
+    else
+        error('Found NII mprage Change fileType to ''NII''')
+    end
+end
+
 % Convert dicom images
 ragedir   = fullfile(b.dataDir,'002_mprage_sag_NS_g3');
 dcmfiles = spm_select('FPList', ragedir, '.*dcm');

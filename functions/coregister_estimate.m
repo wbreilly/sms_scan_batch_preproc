@@ -26,22 +26,19 @@ function [b] = coregister_estimate(b)
 %
 
 
-% run flag 
-% ????
-
 % First re-organize all realigned and resliced files into cell array
 b.allfiles = {};
 for i = 1:length(b.runs)
-    b.allfiles{i} = b.rundir(i).rfiles; 
+    b.allfiles{i} = cellstr(b.rundir(i).rfiles); 
 end
 
 % run coregister estimate 
 clear matlabbatch
 
 % initiate coreg params copied from a gui .m output
-matlabbatch{1}.spm.spatial.coreg.estimate.ref = {b.meanfunc};
-matlabbatch{1}.spm.spatial.coreg.estimate.source = {b.mprage};
-matlabbatch{1}.spm.spatial.coreg.estimate.other = {b.allfiles};
+matlabbatch{1}.spm.spatial.coreg.estimate.ref = cellstr(b.meanfunc);
+matlabbatch{1}.spm.spatial.coreg.estimate.source = cellstr(b.mprage);
+matlabbatch{1}.spm.spatial.coreg.estimate.other = b.allfiles';
 matlabbatch{1}.spm.spatial.coreg.estimate.eoptions.cost_fun = 'nmi';
 matlabbatch{1}.spm.spatial.coreg.estimate.eoptions.sep = [4 2];
 matlabbatch{1}.spm.spatial.coreg.estimate.eoptions.tol = [0.02 0.02 0.02 0.001 0.001 0.001 0.01 0.01 0.01 0.001 0.001 0.001];
@@ -51,5 +48,7 @@ matlabbatch{1}.spm.spatial.coreg.estimate.eoptions.fwhm = [7 7];
 spm('defaults','fmri');
 spm_jobman('initcfg');
 spm_jobman('run',matlabbatch);
+
+
 
 end

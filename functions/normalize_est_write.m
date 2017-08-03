@@ -29,27 +29,34 @@ function [b] = normalize_est_write(b)
 
 % run flag 
 runflag = 1;
-if size(spm_select('FPListRec', b.dataDir, ['^normalize.*' b.runs{1} '.*bold.nii']), 1) > 0 % check only for first run
+if size(spm_select('ExtFPListRec', b.dataDir, ['^normalize.*' b.runs{1} '.*bold\.nii']), 1) > 0 % check only for first run
     if b.auto_accept
         response = 'n';
     else
         response = input('Normalization was already run. Do you want to run it again? y/n \n','s');
     end
     if strcmp(response,'y')==1
-        disp('Continuing running realignment')
+        disp('Continuing running normalization')
     else
-        disp('Skipping realignment')
+        disp('Skipping normalization')
         runflag = 0;
     end
 end
-% ????
 
-clear matlabbatch
+% First re-organize all realigned and resliced files into cell array
+% these should be coregistered but i don't know how to check that that's
+% been done yet. Important to solve. 
+% b.allfiles = {};
 
-% initiate
 if runflag
-    matlabbatch{1}.spm.spatial.normalise.estwrite.subj.vol = {b.mprage};
-    matlabbatch{1}.spm.spatial.normalise.estwrite.subj.resample = {b.allfiles};
+    for i = 1:length(b.runs)
+    clear matlabbatch
+
+    % initiate
+
+    matlabbatch{1}.spm.spatial.normalise.estwrite.subj.vol = cellstr(b.mprage);
+    matlabbatch{1}.spm.spatial.normalise.estwrite.subj.resample = {cellstr(b.rundir(i).rfiles)};  %b.allfiles';
+    keyboard
     matlabbatch{1}.spm.spatial.normalise.estwrite.eoptions.biasreg = 0.0001;
     matlabbatch{1}.spm.spatial.normalise.estwrite.eoptions.biasfwhm = 60;
     matlabbatch{1}.spm.spatial.normalise.estwrite.eoptions.tpm = {'/Users/wbr/Documents/Matlab/spm12/tpm/TPM.nii'};
@@ -57,11 +64,15 @@ if runflag
     matlabbatch{1}.spm.spatial.normalise.estwrite.eoptions.reg = [0 0.001 0.5 0.05 0.2];
     matlabbatch{1}.spm.spatial.normalise.estwrite.eoptions.fwhm = 0;
     matlabbatch{1}.spm.spatial.normalise.estwrite.eoptions.samp = 3;
-    matlabbatch{1}.spm.spatial.normalise.estwrite.woptions.bb = [-78 -112 -70
-                                                                 78 76 85];
+    matlabbatch{1}.spm.spatial.normalise.estwrite.woptions.bb = [-78 -112 -70 78 76 85];
     matlabbatch{1}.spm.spatial.normalise.estwrite.woptions.vox = [2 2 2];
     matlabbatch{1}.spm.spatial.normalise.estwrite.woptions.interp = 5;
     matlabbatch{1}.spm.spatial.normalise.estwrite.woptions.prefix = 'normalize_';
+    
+    spm('defaults','fmri');
+    spm_jobman('initcfg');
+    spm_jobman('run',matlabbatch);
+end
 end
 
 % get file info for each run and sotre for future use
