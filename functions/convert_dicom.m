@@ -72,7 +72,7 @@ for irun = 1:length(b.runs)
     spm_jobman('run',matlabbatch);
     
     delete f*.nii
-    b.rundir(irun).files = sprintf('%s/%s/%s.%s.bold.nii',b.dataDir,b.runs{irun}, b.curSubj, b.runs{irun});
+    b.rundir(irun).files = spm_select('ExtFPListRec', b.dataDir, ['^.*'  b.runs{irun} '.*bold\.nii']);
     
     
     
@@ -103,7 +103,6 @@ dcmhdr    = spm_dicom_headers(dcmfiles);
 cd(ragedir)
 dcmoutput = spm_dicom_convert(dcmhdr, 'all', 'flat', 'nii');
 b.mprage = cell2mat(dcmoutput.files);
-fprintf('%0.0f files converted to nii (mprage).\n', size(b.rundir(irun).files, 1));
-
+fprintf('%0.0f files converted to nii (mprage).\n', size(b.mprage, 1));
 cd(b.scriptdir);
 end

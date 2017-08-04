@@ -52,7 +52,7 @@ if runflag
         
         %initiate
         matlabbatch{1}.spm.spatial.normalise.write.subj.def = cellstr(b.def);
-        matlabbatch{1}.spm.spatial.normalise.write.subj.resample = cellstr(b.rundir(i).rfiles);
+        matlabbatch{1}.spm.spatial.normalise.write.subj.resample = cellstr(b.rundir(i).sfiles);
         matlabbatch{1}.spm.spatial.normalise.write.woptions.bb = [-78 -112 -70 78 76 85];
         matlabbatch{1}.spm.spatial.normalise.write.woptions.vox = [2 2 2];
         matlabbatch{1}.spm.spatial.normalise.write.woptions.interp = 4;

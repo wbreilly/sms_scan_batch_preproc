@@ -3,7 +3,7 @@ function [b] = slicetime_correct(b)
 % written by Walter Reilly to pre proc the dirty data 
 %   Usage:
 %
-%	b = convert_dicom(b)
+%	b = slicetime_correct(b)
 %   
 %   input arguments:
 %

@@ -73,7 +73,7 @@ end
 % Then run realignment
 if runflag
     spm_realign(b.allfiles);
-    spm_reslice(b.allfiles);
+    %spm_reslice(b.allfiles);
 end
 
 fprintf('\n--Finding realignmnet files--\n')
@@ -82,9 +82,9 @@ b.meanfunc = spm_select('FPListRec', b.dataDir, ['^mean.*' b.runs{1} '.*bold\.ni
 fprintf('\nMean: %s\n', b.meanfunc)
 for i = 1:length(b.runs)
     b.rundir(i).rp     = spm_select('FPListRec', b.dataDir, ['^rp.*' b.runs{i} '.*bold\.txt']);
-    b.rundir(i).rfiles = spm_select('ExtFPListRec', b.dataDir, ['^r.*'  b.runs{i} '.*bold\.nii']);
+    %b.rundir(i).rfiles = spm_select('ExtFPListRec', b.dataDir, ['^r.*'  b.runs{i} '.*bold\.nii']);
     fprintf('%02d:   %s\n', i, b.rundir(i).rp)
-    fprintf('%02d:   %0.0f rfiles found.\n', i, length(b.rundir(i).rfiles))
+    %fprintf('%02d:   %0.0f rfiles found.\n', i, length(b.rundir(i).rfiles))
 end
 
 end % realign function
