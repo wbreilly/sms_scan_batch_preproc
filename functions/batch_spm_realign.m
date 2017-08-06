@@ -73,7 +73,8 @@ end
 % Then run realignment
 if runflag
     spm_realign(b.allfiles);
-    %spm_reslice(b.allfiles);
+    % flag creates mean nii and no other images
+    spm_reslice(b.allfiles, which('0'));
 end
 
 fprintf('\n--Finding realignmnet files--\n')

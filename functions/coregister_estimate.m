@@ -35,6 +35,7 @@ end
 % run coregister estimate 
 clear matlabbatch
 
+
 % initiate coreg params copied from a gui .m output
 matlabbatch{1}.spm.spatial.coreg.estimate.ref = cellstr(b.meanfunc);
 matlabbatch{1}.spm.spatial.coreg.estimate.source = cellstr(b.mprage);
