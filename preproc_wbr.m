@@ -20,7 +20,7 @@ fileType    = 'DCM';
 % scriptdir = path to directory housing this script (and auxiliary scripts)
 % QAdir     = Name of output QA directory
 
-dataDir     = '/Users/wbr/walter/fmri/sms_scan_analyses/data_for_spm/batch_preproc_test_8_2_17';
+dataDir     = '/Users/wbr/walter/fmri/sms_scan_analyses/data_for_spm/batch_preproc_8_23_17';
 scriptdir   = '/Users/wbr/walter/fmri/sms_scan_analyses/sms_scan_batch_preproc'; % fileparts(mfilename('fullpath'));
 
 
@@ -39,7 +39,7 @@ scriptdir   = '/Users/wbr/walter/fmri/sms_scan_analyses/sms_scan_batch_preproc';
 %
 %  See BIDS format
 
-subjects    = {'s001' 's002' 's003' 's004'};
+subjects    = {'s001' 's002' 's003' 's004' 's007'};
 runs        = {'Rifa_1' 'Rifa_2' 'Rifa_3' 'Rifa_4' 'Rifa_5' 'Rifa_6' 'Rifa_7' 'Rifa_8' 'Rifa_9'};  
 
 %-- Auto-accept
@@ -159,6 +159,11 @@ for i = 1:length(subjects)
     fprintf('------------------------------------------------------------\n')
     fprintf('\n')
     
+    % Run smooth
+    fprintf('--Smoothing--\n')
+    [b] = smooth_wbr(b);
+    fprintf('------------------------------------------------------------\n')
+    fprintf('\n')
     
 end % i (subjects)
 
