@@ -62,7 +62,7 @@ if runflag
     % setup batch with slice time paramaters (created in gui on 7_30_17)
     matlabbatch{1}.spm.temporal.st.scans = b.allfiles';
     matlabbatch{1}.spm.temporal.st.nslices = 38;
-    matlabbatch{1}.spm.temporal.st.tr = 1220;
+    matlabbatch{1}.spm.temporal.st.tr = 1.220;
     matlabbatch{1}.spm.temporal.st.ta = 0;
     matlabbatch{1}.spm.temporal.st.so = [0 632.49999999 62.5 694.99999999 125 757.49999999 190 819.99999999 252.5 884.99999999 315 947.49999999 377.5 1009.99999999 442.5 1072.49999999 505 1137.5 567.5 0 632.49999999 62.5 694.99999999 125 757.49999999 190 819.99999999 252.5 884.99999999 315 947.49999999 377.5 1009.99999999 442.5 1072.49999999 505 1137.5 567.5];
     matlabbatch{1}.spm.temporal.st.refslice = 0;
