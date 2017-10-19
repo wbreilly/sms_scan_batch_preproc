@@ -49,7 +49,9 @@ if runflag
         clear matlabbatch
         
         %initiate
-        matlabbatch{1}.spm.spatial.smooth.data = cellstr(b.rundir(i).nfiles);
+        % if normalizing, bring back .nfiles
+        %matlabbatch{1}.spm.spatial.smooth.data = cellstr(b.rundir(i).nfiles);
+        matlabbatch{1}.spm.spatial.smooth.data = cellstr(b.rundir(i).sfiles);
         matlabbatch{1}.spm.spatial.smooth.fwhm = [8 8 8];
         matlabbatch{1}.spm.spatial.smooth.dtype = 0;
         matlabbatch{1}.spm.spatial.smooth.im = 0;

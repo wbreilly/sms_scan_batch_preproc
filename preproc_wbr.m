@@ -12,7 +12,7 @@ function [] = preproc_wbr()
 % SPM). 'DCM' or 'NII'. Note: this QA routine is NOT compatible with
 % .img/.hdr. Please convert .img/.hdr to .nii prior to running routine.
 
-fileType    = 'DCM';
+fileType    = 'NII';
 
 %-- Directory Information
 % Paths to relevant directories.
@@ -20,7 +20,7 @@ fileType    = 'DCM';
 % scriptdir = path to directory housing this script (and auxiliary scripts)
 % QAdir     = Name of output QA directory
 
-dataDir     = '/Users/wbr/walter/fmri/sms_scan_analyses/data_for_spm/batch_preproc_8_23_17';
+dataDir     = '/Users/wbr/walter/fmri/sms_scan_analyses/data_for_spm/batch_preproc_native_10_12_17';
 scriptdir   = '/Users/wbr/walter/fmri/sms_scan_analyses/sms_scan_batch_preproc'; % fileparts(mfilename('fullpath'));
 
 
@@ -39,7 +39,7 @@ scriptdir   = '/Users/wbr/walter/fmri/sms_scan_analyses/sms_scan_batch_preproc';
 %
 %  See BIDS format
 
-subjects    = {'s008'};%'s001' 's002' 's003' 's004' 's007'};
+subjects    = { 's001' 's002' 's003' 's004' 's007' 's008' 's009', 's010', 's011'};
 runs        = {'Rifa_1' 'Rifa_2' 'Rifa_3' 'Rifa_4' 'Rifa_5' 'Rifa_6' 'Rifa_7' 'Rifa_8' 'Rifa_9'};  
 
 %-- Auto-accept
@@ -98,7 +98,7 @@ for i = 1:length(subjects)
     % Check whether QA has already been run for a subject
     
     % Initialize diary for saving output
-    diaryname = fullfile(b.dataDir, 'QA_diary_output.txt');
+    diaryname = fullfile(b.dataDir, 'Native_preproc_diary_output.txt');
     diary(diaryname);
     
     % Convert dicom images or find nifti images
@@ -147,17 +147,17 @@ for i = 1:length(subjects)
         fprintf('\n')
     end
     
-    % Run normalization estimate
-    fprintf('--Normalize estimating--\n')
-    [b] = normalize_estimate(b);
-    fprintf('------------------------------------------------------------\n')
-    fprintf('\n')
-    
-    % Run normalization write
-    fprintf('--Normalize writing--\n')
-    [b] = normalize_write(b);
-    fprintf('------------------------------------------------------------\n')
-    fprintf('\n')
+%     % Run normalization estimate
+%     fprintf('--Normalize estimating--\n')
+%     [b] = normalize_estimate(b);
+%     fprintf('------------------------------------------------------------\n')
+%     fprintf('\n')
+%     
+%     % Run normalization write
+%     fprintf('--Normalize writing--\n')
+%     [b] = normalize_write(b);
+%     fprintf('------------------------------------------------------------\n')
+%     fprintf('\n')
     
     % Run smooth
     fprintf('--Smoothing--\n')
