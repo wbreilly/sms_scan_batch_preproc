@@ -30,6 +30,26 @@ function [b] = normalize_write(b)
 % 
 %       b.rundir.nfiles  = normalized volumes
 
+%% 
+% grab slice time files 
+% only required when jumping into this step from native space pipeline
+for i = 1:length(b.runs)
+    b.rundir(i).sfiles = spm_select('ExtFPListRec', b.dataDir, ['^slicetime.*'  b.runs{i} '.*bold\.nii']);
+    fprintf('%02d:   %0.0f slicetime files found.\n', i, length(b.rundir(i).sfiles))
+end
+
+
+% get the def field created in normalize_estimate.m
+ragedir   = fullfile(b.dataDir,'002_mprage_sag_NS_g3');
+if size(spm_select('FPListRec', ragedir, ['^y.*' '.*.nii']), 1) > 0
+    b.def = spm_select('FPListRec', ragedir, ['^y.*' '.*.nii']);
+    fprintf('Found deformation field!') 
+else fprintf('No def!!')
+end
+
+
+%%
+
 % run flag 
 runflag = 1;
 if size(spm_select('ExtFPListRec', b.dataDir, ['^normalized*' b.runs{1} '.*bold\.nii']), 1) > 0 
@@ -53,7 +73,7 @@ if runflag
         %initiate
         matlabbatch{1}.spm.spatial.normalise.write.subj.def = cellstr(b.def);
         matlabbatch{1}.spm.spatial.normalise.write.subj.resample = cellstr(b.rundir(i).sfiles);
-        matlabbatch{1}.spm.spatial.normalise.write.woptions.bb = [-78 -112 -70 78 76 85];
+        matlabbatch{1}.spm.spatial.normalise.write.woptions.bb = [-78 -112 -70; 78 76 85];
         matlabbatch{1}.spm.spatial.normalise.write.woptions.vox = [2 2 2];
         matlabbatch{1}.spm.spatial.normalise.write.woptions.interp = 4;
         matlabbatch{1}.spm.spatial.normalise.write.woptions.prefix = 'normalized_';

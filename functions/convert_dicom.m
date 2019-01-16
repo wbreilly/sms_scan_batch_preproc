@@ -37,41 +37,41 @@ function [b] = convert_dicom(b)
 for irun = 1:length(b.runs)
     
     rundir   = fullfile(b.dataDir, b.runs{irun});
-    dcmfiles = spm_select('FPList', rundir, '.*dcm');
-    fprintf('In directory %s:\n%0.0f dcm files found...\n', rundir, size(dcmfiles,1));
-    
-    % Check whether there are already nifti files
-    niifiles = spm_select('FPList', rundir, '.*\.nii');
-    if size(niifiles, 1) > 0
-        fprintf('There are already %0.0f nii files in this folder.\n', size(niifiles,1));
-        response = input('Are you sure you want to use dicom files? y/n \n', 's');
-        if strcmp(response,'y') == 1
-            disp('Continuing running dicom conversion')
-        else
-            error('Change fileType to ''NII''')
-        end
-    end
-    
-    % Convert dicom images
-    dcmhdr    = spm_dicom_headers(dcmfiles);
-    cd(rundir);
-    dcmoutput = spm_dicom_convert(dcmhdr, 'all', 'flat', 'nii');
-    
-    b.rundir(irun).files = cell2mat(dcmoutput.files);
-    fprintf('%0.0f files converted to nii.\n', size(b.rundir(irun).files, 1));
-    
-    
-    
-    
-    %%%%%% added by wbr to adopt naming convention
-    matlabbatch{1}.spm.util.cat.vols = cellstr(spm_select('FPListRec', rundir, '^*.nii'));
-    matlabbatch{1}.spm.util.cat.name = sprintf('%s.%s.bold.nii',b.curSubj, b.runs{irun});
-    matlabbatch{1}.spm.util.cat.dtype = 4;
-    spm('defaults','fmri');
-    spm_jobman('initcfg');
-    spm_jobman('run',matlabbatch);
-    
-    delete f*.nii
+%     dcmfiles = spm_select('FPList', rundir, '.*dcm');
+%     fprintf('In directory %s:\n%0.0f dcm files found...\n', rundir, size(dcmfiles,1));
+%     
+%     % Check whether there are already nifti files
+%     niifiles = spm_select('FPList', rundir, '.*\.nii');
+%     if size(niifiles, 1) > 0
+%         fprintf('There are already %0.0f nii files in this folder.\n', size(niifiles,1));
+%         response = input('Are you sure you want to use dicom files? y/n \n', 's');
+%         if strcmp(response,'y') == 1
+%             disp('Continuing running dicom conversion')
+%         else
+%             error('Change fileType to ''NII''')
+%         end
+%     end
+%     
+%     % Convert dicom images
+%     dcmhdr    = spm_dicom_headers(dcmfiles);
+%     cd(rundir);
+%     dcmoutput = spm_dicom_convert(dcmhdr, 'all', 'flat', 'nii');
+%     
+%     b.rundir(irun).files = cell2mat(dcmoutput.files);
+%     fprintf('%0.0f files converted to nii.\n', size(b.rundir(irun).files, 1));
+%     
+%     
+%     
+%     
+%     %%%%%% added by wbr to adopt naming convention
+%     matlabbatch{1}.spm.util.cat.vols = cellstr(spm_select('FPListRec', rundir, '^*.nii'));
+%     matlabbatch{1}.spm.util.cat.name = sprintf('%s.%s.bold.nii',b.curSubj, b.runs{irun});
+%     matlabbatch{1}.spm.util.cat.dtype = 4;
+%     spm('defaults','fmri');
+%     spm_jobman('initcfg');
+%     spm_jobman('run',matlabbatch);
+%     
+%     delete f*.nii
     b.rundir(irun).files = spm_select('ExtFPListRec', b.dataDir, ['^.*'  b.runs{irun} '.*bold\.nii']);
     
     

@@ -27,8 +27,19 @@ function [b] = normalize_estimate(b)
 % 
 %       b.def         = deformation field for noramlize write
 
-ragedir   = fullfile(b.dataDir,'002_mprage_sag_NS_g3');
 
+
+% added find rage here to run from native preproc scirpt
+%find mprage
+ragedir   = fullfile(b.dataDir,'002_mprage_sag_NS_g3');
+ragefiles = spm_select('FPListRec', ragedir, ['^ssms.*' '.*.nii']);
+
+if size(ragefiles, 1) == 1
+    fprintf('Found 1 mprage NII')
+    b.mprage = ragefiles;
+else
+    error('Could not find mprage NII')
+end
 
 % run flag 
 runflag = 1;

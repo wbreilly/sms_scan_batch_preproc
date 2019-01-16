@@ -20,7 +20,7 @@ fileType    = 'NII';
 % scriptdir = path to directory housing this script (and auxiliary scripts)
 % QAdir     = Name of output QA directory
 
-dataDir     = '/Users/wbr/walter/fmri/sms_scan_analyses/data_for_spm/batch_preproc_native_10_12_17';
+dataDir     = '/Users/wbr/walter/fmri/sms_scan_analyses/data_for_spm/firstlevel_5_3_18';
 scriptdir   = '/Users/wbr/walter/fmri/sms_scan_analyses/sms_scan_batch_preproc'; % fileparts(mfilename('fullpath'));
 
 
@@ -39,7 +39,7 @@ scriptdir   = '/Users/wbr/walter/fmri/sms_scan_analyses/sms_scan_batch_preproc';
 %
 %  See BIDS format
 
-subjects    = { 's001' 's002' 's003' 's004' 's007' 's008' 's009', 's010', 's011'};
+subjects    = {'s001' 's002' 's003' 's004' 's007' 's008' 's009' 's010' 's011' 's015' 's016' 's018' 's019' 's020' 's022' 's023' 's024' 's025'};
 runs        = {'Rifa_1' 'Rifa_2' 'Rifa_3' 'Rifa_4' 'Rifa_5' 'Rifa_6' 'Rifa_7' 'Rifa_8' 'Rifa_9'};  
 
 %-- Auto-accept
@@ -98,61 +98,61 @@ for i = 1:length(subjects)
     % Check whether QA has already been run for a subject
     
     % Initialize diary for saving output
-    diaryname = fullfile(b.dataDir, 'Native_preproc_diary_output.txt');
+    diaryname = fullfile(b.dataDir, 'normalized_preproc_diary_output.txt');
     diary(diaryname);
-    
-    % Convert dicom images or find nifti images
-    if strcmp(fileType, 'DCM')
-        fprintf('--Converting DCM files to NII format--\n')
-        [b] = convert_dicom(b);
-        fprintf('------------------------------------------------------------\n')
-        fprintf('\n')
-    elseif strcmp(fileType, 'NII')
-        fprintf('--Finding NII files (no DCM conversion required)--\n')
-        [b] = find_nii(b);
-        fprintf('------------------------------------------------------------\n')
-        fprintf('\n')
-    else
-        error('Specify a valid fileType (''DCM'' or ''NII'')');
-    end
-    
-    % run slice time correction
-    fprintf('--Running slicetime correction--\n')
-    [b] = slicetime_correct(b);
-    fprintf('------------------------------------------------------------\n')
-    fprintf('\n')
-   
-    % Run realignment
-    fprintf('--Realigning and reslicing images using spm_realign and spm_reslice--\n')
-    [b] = batch_spm_realign(b);
-    fprintf('------------------------------------------------------------\n')
-    fprintf('\n')
-    
+%     
+%     % Convert dicom images or find nifti images
+%     if strcmp(fileType, 'DCM')
+%         fprintf('--Converting DCM files to NII format--\n')
+%         [b] = convert_dicom(b);
+%         fprintf('------------------------------------------------------------\n')
+%         fprintf('\n')
+%     elseif strcmp(fileType, 'NII')
+%         fprintf('--Finding NII files (no DCM conversion required)--\n')
+%         [b] = find_nii(b);
+%         fprintf('------------------------------------------------------------\n')
+%         fprintf('\n')
+%     else
+%         error('Specify a valid fileType (''DCM'' or ''NII'')');
+%     end
+%     
+%     % run slice time correction
+%     fprintf('--Running slicetime correction--\n')
+%     [b] = slicetime_correct(b);
+%     fprintf('------------------------------------------------------------\n')
+%     fprintf('\n')
+%    
+%     % Run realignment
+%     fprintf('--Realigning and reslicing images using spm_realign and spm_reslice--\n')
+%     [b] = batch_spm_realign(b);
+%     fprintf('------------------------------------------------------------\n')
+%     fprintf('\n')
+%     
     % set origin in mprage to AC
-    fprintf('Set origin to AC!')
-    [b] = set_origin(b);
-    fprintf('------------------------------------------------------------\n')
-    fprintf('\n')
+%     fprintf('Set origin to AC!')
+%     [b] = set_origin(b);
+%     fprintf('------------------------------------------------------------\n')
+%     fprintf('\n')
     
     
     % Run coregistration (estimate)
-    if coreg_flag
-        fprintf('--Coregistering images--\n')
-        [b] = coregister_estimate(b);
-        fprintf('------------------------------------------------------------\n')
-        fprintf('\n')
-    else
-        fprintf('--Skipping coregistration--\n')
-        fprintf('------------------------------------------------------------\n')
-        fprintf('\n')
-    end
+%     if coreg_flag
+%         fprintf('--Coregistering images--\n')
+%         [b] = coregister_estimate(b);
+%         fprintf('------------------------------------------------------------\n')
+%         fprintf('\n')
+%     else
+%         fprintf('--Skipping coregistration--\n')
+%         fprintf('------------------------------------------------------------\n')
+%         fprintf('\n')
+%     end
     
-%     % Run normalization estimate
+    % Run normalization estimate
 %     fprintf('--Normalize estimating--\n')
 %     [b] = normalize_estimate(b);
 %     fprintf('------------------------------------------------------------\n')
 %     fprintf('\n')
-%     
+    
 %     % Run normalization write
 %     fprintf('--Normalize writing--\n')
 %     [b] = normalize_write(b);
